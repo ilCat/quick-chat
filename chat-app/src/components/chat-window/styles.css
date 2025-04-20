@@ -1,0 +1,26 @@
+.chat-component {
+    height: "90vh";
+    display: "flex";
+    flex-direction: "column";
+    padding: "2px";
+    background: "#141414";
+    color: "#fff";
+}
+
+.chat-message {
+    flex-grow: 1;
+    overflow-y: "auto";
+    gap: 4;
+}
+
+.chat-prompt {
+    display: "flex";
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.chat-buttons {
+    display: flex;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
