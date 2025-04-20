@@ -1,13 +1,17 @@
 import './styles.css'
 import React, { useState } from "react";
-import { Input, Button } from "antd";
+import { Input} from "antd";
 import ChatMessage, { ChatMessageProps } from "../messages/GenericMessage";
+import {FilePdfOutlined } from '@ant-design/icons';
+import { IButtonProps, ButtonPanel } from '../button-panel/ButtonPanel';
 
 const { TextArea } = Input;
 
 const ChatWindow: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [input, setInput] = useState("");
+
+
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -21,6 +25,19 @@ const ChatWindow: React.FC = () => {
     setMessages(newMessages);
     setInput("");
   };
+
+  const buttons: IButtonProps[] = [{
+    title: "Send",
+    onClick: handleSend,
+    className: "send-button"
+  },
+  {
+    title: "Click to Upload",
+    onClick:()=>{console.log('import')},
+    className: "send-button",
+    icon: <FilePdfOutlined />
+  }]
+
 
   return (
     <div className="chat-component"
@@ -43,11 +60,8 @@ const ChatWindow: React.FC = () => {
             }
           }}
         />
-        <div className='chat-buttons'>	
-        <Button style={{justifySelf:'end'}} type="primary" onClick={handleSend}>
-          Send
-        </Button>
-        </div>
+        <ButtonPanel buttons={buttons}/>
+        
       </div>
     </div>
   );

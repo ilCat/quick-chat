@@ -19,8 +19,8 @@
     padding-bottom: 4px;
 }
 
-.chat-buttons {
+.send-button {
     display: flex;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding: 2px;
+    justify-self: end;
 }

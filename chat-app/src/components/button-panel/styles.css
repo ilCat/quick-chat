@@ -1,0 +1,8 @@
+.button-panel {
+    display: flex;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    gap: 10px;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
