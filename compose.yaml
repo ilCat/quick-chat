@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+
+  frontend:
+    build: ./chat-app
+    container_name: chat-app
+    ports:
+      - '3000:3000'
+    stdin_open: true
+    tty: true
+    command: [ "npm", "run", "dev" ]
+    volumes:
+      - ./chat-app:/app
