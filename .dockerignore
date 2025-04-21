@@ -18,9 +18,3 @@ build
 .editorconfig
 .DS_Store
 
-# Python Files 
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
