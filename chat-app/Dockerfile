@@ -1,24 +1,17 @@
-# ## Dockerfile
-# ################################
-# ## BUILD ENVIRONMENT ###########
-# ################################
+# Image
+FROM node:20-alpine3.20 
+#  As build
 
-# # Use the official Node.js Alpine image (adjust based on your project's requirements)
-# # You can find the appropriate image on Docker Hub: https://hub.docker.com/_/node
-# # In this example, we're using node:20-alpine3.20
-# # run in termilnal commande line "node --version to get the version of your app"
-FROM node:20-alpine3.20 As build
-
-# Set the working directory inside the container
+# Set the working directory
+# WORKDIR /usr/src/app
 WORKDIR /app
 
-# Copy package.json and package-lock.json into the container
+# Copy package
 COPY package.json package-lock.json ./
 
 
-# Install dependencies using npm
-RUN npm i
-RUN npm ci
+# Install dependencies 
+RUN npm ci 
 
 # Copy the project files into the working directory
 COPY ./ ./
@@ -26,11 +19,10 @@ COPY ./ ./
 # Build the React app for production
 # RUN npm run build
 
-
 # Expose port 80 to allow access to the app
 EXPOSE  3000
 
-CMD [ "npm", 'run', "dev" ]
+CMD [ "npm", "run", "dev" ]
 # # ################################
 # # #### PRODUCTION ENVIRONMENT ####
 # # ################################

@@ -30,3 +30,10 @@ A full stack web application that allows users to interact with a simulated gene
 ```bash
 git clone https://github.com/ilCat/quick-chat.git
 cd quick-chat
+```
+
+### 2. Clone the repository
+
+```bash
+docker-compose up --build --force-recreate
+```
