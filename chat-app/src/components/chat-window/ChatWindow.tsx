@@ -28,7 +28,7 @@ const ChatWindow: React.FC = () => {
           { const newMessages: ChatMessageProps[] = [
           ...messages ,
 
-          {...messages[messages.length - 1] ,message: "🤖 Simulated response. -> "+ JSON.stringify(resp), loading: false },
+          {...messages[messages.length] ,message: "🤖 Simulated response. -> "+ JSON.stringify(resp), loading: false },
         ]
         setMessages(newMessages)
         setInput("");}

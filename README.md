@@ -35,5 +35,5 @@ cd quick-chat
 ### 2. Clone the repository
 
 ```bash
-docker-compose up --build --force-recreate
+docker-compose up --build 
 ```

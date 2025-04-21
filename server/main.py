@@ -37,4 +37,4 @@ async def ai_gen(query: ChatMessage):
 async def upload_file(file: UploadFile):
     """ """
     print(file.filename)
-    return file.filename
+    return file
