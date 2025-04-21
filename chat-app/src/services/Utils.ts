@@ -16,3 +16,15 @@ function SendMessage({user, message, document=false}:{user:string, message:strin
 }
 
 export {SendMessage}
+
+export interface Idocs {
+  title: string
+  url: string
+}
+function FetchDocs(): Promise<Idocs[]>{
+  return fetch(`http://localhost:8000/Ref`).then(response => {
+      return response.json()
+    })
+}
+
+export {FetchDocs}

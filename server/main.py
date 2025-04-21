@@ -1,8 +1,10 @@
 from typing import List
-from fastapi import FastAPI, HTTPException, status, UploadFile
+from fastapi import FastAPI, HTTPException, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from time import sleep
 from models.models import ChatMessage
+from data.mock import src_docs
+import fitz
 
 app = FastAPI()
 app.add_middleware(
@@ -34,7 +36,16 @@ async def ai_gen(query: ChatMessage):
     "/upload",
     status_code=status.HTTP_201_CREATED,
 )
-async def upload_file(file: UploadFile):
+async def upload_file(file: UploadFile = File(...)):
     """ """
-    print(file.filename)
-    return file
+    contents = await file.read()
+    doc = fitz.open(stream=contents, filetype="pdf")
+    first_page = doc.load_page(0)
+    text = first_page.get_text()
+    doc.close()
+    return {"extracted_text": text[:500]}
+
+
+@app.get("/Ref")
+async def get_references():
+    return src_docs

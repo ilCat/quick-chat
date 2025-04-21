@@ -1,8 +1,11 @@
 import './styles.css'
-import { Button ,message, Upload} from "antd";
+import { Button, Upload, notification} from "antd";
 import { UploadProps } from 'antd';
 
-
+interface INotification {
+  type :'success' | 'info' | 'warning' | 'error'
+  message: string
+}
 export interface IButtonProps {
     title: string
     icon?: any
@@ -17,42 +20,54 @@ interface IButtonPanelProps{
 }
 
 export const ButtonPanel = (props: IButtonPanelProps) => {
+
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (notification: INotification) => {
+    api[notification.type]({
+      message: notification.message,
+    });
+  };
   
   const Uprops: UploadProps = {
     name: 'file',
     action: 'http://localhost:8000/upload',
+    showUploadList:false,
     headers: {
       authorization: 'authorization-text',
     },
     onChange(info) {
-      console.log(info)
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
+      console.log('info ->',info)
       if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
+        
+        openNotification({type: 'success', message:`${info.file.name} file uploaded successfully`});
       } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+        openNotification({type: 'error', message:`${info.file.name} file upload failed.`});
       }
     },
   }
 
   return (
+    <>
+    {contextHolder}
     <div className='button-panel'>	
-    {props.buttons.map( item =>   item.isUpload ? 
-                                                  <Upload {...Uprops}>
-                                                    <Button className={item.className} type="primary" onClick={item.onClick} hidden={item.hidden} disabled={item.disabled} >
-                                                        {item.icon ? item.icon : null}
-                                                        <span>{item.title as string}</span>
-                                                    </Button>
-                                                  </Upload> 
-                                                  :
-                                                  <Button className={item.className} type="primary" onClick={item.onClick} hidden={item.hidden} disabled={item.disabled} >
-                                                      {item.icon ? item.icon : null}
-                                                      <span>{item.title as string}</span>
-                                                  </Button>
-                                  )}
+    {props.buttons.map( item =>   
+    item.isUpload ? 
+                  <Upload {...Uprops}>
+                    <Button className={item.className} type="primary" onClick={item.onClick} hidden={item.hidden} disabled={item.disabled} >
+                        {item.icon ? item.icon : null}
+                        <span>{item.title as string}</span>
+                    </Button>
+                  </Upload> 
+                  :
+                  <Button className={item.className} type="primary" onClick={item.onClick} hidden={item.hidden} disabled={item.disabled} >
+                      {item.icon ? item.icon : null}
+                      <span>{item.title as string}</span>
+                  </Button>
+  )}
     </div>
+    </>
+    
   )
 }
 

@@ -1,53 +1,68 @@
 import './styles.css'
-import React, { useState } from "react";
-import { Input} from "antd";
+import React, { useEffect, useState } from "react";
+import { Dropdown, Input, Space} from "antd";
 import ChatMessage, { ChatMessageProps } from "../messages/GenericMessage";
-import {FilePdfOutlined } from '@ant-design/icons';
+import { FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
 import { IButtonProps, ButtonPanel } from '../button-panel/ButtonPanel';
-import { SendMessage } from '../../services/Utils';
+import { SendMessage, FetchDocs, Idocs } from '../../services/Utils';
+import { MenuProps } from 'antd';
+
+
 const { TextArea } = Input;
+
 
 const ChatWindow: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [input, setInput] = useState("");
+  const [items, setItems] = useState<MenuProps['items']>([{label: '', key:'999999999'}])
+  
+  useEffect(()=>{
+    FetchDocs().then(res => {
+      const collection = res.map((i, id) => {
+        return {label: (
+                        <a onClick={()=>handleReference(i)} >
+                          {i.title}
+                        </a>
+                      ),
+                key: id.toString()}}
+      )
+      console.log(collection)
+      setItems(collection)
+    })
+  },[])
 
-
-
+  const handleReference =(i:Idocs)=>{   
+    setMessages(prev => [...prev,  { 
+      sender: "user", 
+      message: "Have in account for the theme "+i.title+"  the next link <"+ i.url +">" },
+      { sender: "bot", message: "🤖 " , loading: true}]
+    )
+      SendMessage({user: "Nessuno", message: input }).then( resp =>{ 
+        setMessages(prev => [ ...prev.filter(x => x.loading !== true) , 
+          {sender: "bot" ,message: "🤖 Simulated response. -> "+ JSON.stringify(resp) }
+        ])}
+      )
+  }
 
   const handleSend = () => {
     if (!input.trim()) return;
-    const newMessages: ChatMessageProps[] = [
-      ...messages ,
-      { sender: "user", message: input },
-      { sender: "bot", message: "🤖 " , loading: true}]
-
-    setMessages(newMessages)
+    setMessages(prev => [...prev,  { sender: "user", message: input },
+      { sender: "bot", message: "🤖 " , loading: true}])
     setInput("")
 
-    SendMessage({user: "Nessuno", message: input }).then( resp =>    
-          { const newMessages: ChatMessageProps[] = [
-          ...messages ,
-
-          {...messages[messages.length] ,message: "🤖 Simulated response. -> "+ JSON.stringify(resp), loading: false },
-        ]
-        setMessages(newMessages)
-        setInput("");}
+    SendMessage({user: "Nessuno", message: input }).then( resp => {
+      setMessages(prev => [ ...prev.filter(x => x.loading !== true),
+        {sender: "bot" ,message: "🤖 Simulated response. -> "+ JSON.stringify(resp) }]
       )
-    // const newMessages: ChatMessageProps[] = [
-    //   ...messages,
-    //   { sender: "user", message: input },
-    //   { sender: "bot", message: "🤖 Simulated response." },
-    // ];
-
-    // setMessages(newMessages);
-    // setInput("");
-  };
+    })
+  }
 
   const buttons: IButtonProps[] = [{
     title: "Send",
     onClick: handleSend,
     className: "send-button"
   },
+
   {
     title: "Click to Upload",
     onClick:()=>{console.log('import')},
@@ -66,7 +81,19 @@ const ChatWindow: React.FC = () => {
         ))}
       </div>
 
-      <div className="chat-prompt">
+      <div className="chat-console">
+      <div className="chat-prompt"> 
+      <Dropdown menu={{ items,     selectable: true,
+      defaultSelectedKeys: ['3']}}
+      trigger={['click'] }>
+        <a onClick={(e) => e.preventDefault()}>
+          <Space>
+            Referencies
+            <SearchOutlined />
+          </Space>
+        </a>
+      </Dropdown>
+      
         <TextArea
           rows={2}
           value={input}
@@ -78,6 +105,7 @@ const ChatWindow: React.FC = () => {
             }
           }}
         />
+        </div>
         <ButtonPanel buttons={buttons}/>
         
       </div>
