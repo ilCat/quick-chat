@@ -4,7 +4,7 @@ import { Input} from "antd";
 import ChatMessage, { ChatMessageProps } from "../messages/GenericMessage";
 import {FilePdfOutlined } from '@ant-design/icons';
 import { IButtonProps, ButtonPanel } from '../button-panel/ButtonPanel';
-
+import { SendMessage } from '../../services/Utils';
 const { TextArea } = Input;
 
 const ChatWindow: React.FC = () => {
@@ -13,17 +13,34 @@ const ChatWindow: React.FC = () => {
 
 
 
+
   const handleSend = () => {
     if (!input.trim()) return;
-
     const newMessages: ChatMessageProps[] = [
-      ...messages,
+      ...messages ,
       { sender: "user", message: input },
-      { sender: "bot", message: "🤖 Simulated response." },
-    ];
+      { sender: "bot", message: "🤖 " , loading: true}]
 
-    setMessages(newMessages);
-    setInput("");
+    setMessages(newMessages)
+    setInput("")
+
+    SendMessage({user: "Nessuno", message: input }).then( resp =>    
+          { const newMessages: ChatMessageProps[] = [
+          ...messages ,
+
+          {...messages[messages.length - 1] ,message: "🤖 Simulated response. -> "+ JSON.stringify(resp), loading: false },
+        ]
+        setMessages(newMessages)
+        setInput("");}
+      )
+    // const newMessages: ChatMessageProps[] = [
+    //   ...messages,
+    //   { sender: "user", message: input },
+    //   { sender: "bot", message: "🤖 Simulated response." },
+    // ];
+
+    // setMessages(newMessages);
+    // setInput("");
   };
 
   const buttons: IButtonProps[] = [{
@@ -35,7 +52,8 @@ const ChatWindow: React.FC = () => {
     title: "Click to Upload",
     onClick:()=>{console.log('import')},
     className: "send-button",
-    icon: <FilePdfOutlined />
+    icon: <FilePdfOutlined />,
+    isUpload:true
   }]
 
 
