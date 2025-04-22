@@ -1,5 +1,14 @@
 
-function SendMessage({user, message, document=false}:{user:string, message:string, document?: boolean	}): Promise<object>{
+interface StatusResponce<T> {
+  statusCode?:  number
+  response: T
+}
+
+export interface IHistroryChat {
+  owner: "human" | "system" 
+  message: string 
+}
+function SendMessage({user, message, document=false}:{user:string, message:string, document?: boolean	}): Promise<StatusResponce<IHistroryChat>>{
     return fetch(`http://localhost:8000/message`, {
         method: 'POST',
         headers: {
@@ -14,8 +23,8 @@ function SendMessage({user, message, document=false}:{user:string, message:strin
         return response.json()
       })
 }
-
 export {SendMessage}
+
 
 export interface Idocs {
   title: string
@@ -26,5 +35,12 @@ function FetchDocs(): Promise<Idocs[]>{
       return response.json()
     })
 }
-
 export {FetchDocs}
+
+
+function FetchMemories(user_id: string): Promise<IHistroryChat[]>{
+  return fetch(`http://localhost:8000/memories/${user_id}`).then(response => {
+      return response.json()
+    })
+}
+export {FetchMemories}

@@ -14,3 +14,8 @@ class ChatMessage(BaseModel):
             "example": {"user": "ALX", "message": "Ciao, come va?", "document": False}
         },
     )
+
+
+class CacheStruct(BaseModel):
+    question: str
+    answer: str

@@ -4,13 +4,13 @@ import { Card, Typography } from "antd";
 const { Text } = Typography;
 
 export interface ChatMessageProps {
-  sender: "user" | "bot"
+  sender: "human" | "system"
   message: string
   loading?: boolean  
 }
 
 const GenericMessage: React.FC<ChatMessageProps> = ({ sender, message, loading }) => {
-  const isUser = sender === "user";
+  const isUser = sender === "human";
 
   return (
     <div className={isUser?"user-message":"ai-message" } >

@@ -4,18 +4,19 @@ import { Dropdown, Input, Space} from "antd";
 import ChatMessage, { ChatMessageProps } from "../messages/GenericMessage";
 import { FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
 import { IButtonProps, ButtonPanel } from '../button-panel/ButtonPanel';
-import { SendMessage, FetchDocs, Idocs } from '../../services/Utils';
+import { SendMessage, FetchDocs, Idocs, FetchMemories } from '../../services/Utils';
 import { MenuProps } from 'antd';
 
 
 const { TextArea } = Input;
-
+const user ='Nessuno'
 
 const ChatWindow: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [input, setInput] = useState("");
   const [items, setItems] = useState<MenuProps['items']>([{label: '', key:'999999999'}])
   
+
   useEffect(()=>{
     FetchDocs().then(res => {
       const collection = res.map((i, id) => {
@@ -29,30 +30,41 @@ const ChatWindow: React.FC = () => {
       console.log(collection)
       setItems(collection)
     })
+
   },[])
 
-  const handleReference =(i:Idocs)=>{   
+  useEffect(() =>{   FetchMemories(user).then(res=> {
+    if (res.length >0){
+      const hist = res.map(data =>{return {"sender": data.owner, 
+        "message": data.message }})
+        console.log(hist)
+      setMessages(hist)
+    }
+  })},[])
+
+  const handleReference =(i:Idocs)=>{  
+    const msg = "Have in account for the theme "+i.title+"  the next link <"+ i.url +">" 
     setMessages(prev => [...prev,  { 
-      sender: "user", 
-      message: "Have in account for the theme "+i.title+"  the next link <"+ i.url +">" },
-      { sender: "bot", message: "🤖 " , loading: true}]
+      sender: "human", 
+      message: msg },
+      { sender: "system", message: "🤖 " , loading: true}]
     )
-      SendMessage({user: "Nessuno", message: input }).then( resp =>{ 
+      SendMessage({user: user, message: msg }).then( resp =>{ 
         setMessages(prev => [ ...prev.filter(x => x.loading !== true) , 
-          {sender: "bot" ,message: "🤖 Simulated response. -> "+ JSON.stringify(resp) }
+          {sender: resp.response.owner ,message: resp.response.message }
         ])}
       )
   }
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages(prev => [...prev,  { sender: "user", message: input },
-      { sender: "bot", message: "🤖 " , loading: true}])
+    setMessages(prev => [...prev,  { sender: "human", message: input },
+      { sender: "system", message: "🤖 " , loading: true}])
     setInput("")
 
-    SendMessage({user: "Nessuno", message: input }).then( resp => {
+    SendMessage({user:user, message: input }).then( resp => {
       setMessages(prev => [ ...prev.filter(x => x.loading !== true),
-        {sender: "bot" ,message: "🤖 Simulated response. -> "+ JSON.stringify(resp) }]
+        {sender: resp.response.owner ,message: resp.response.message }]
       )
     })
   }
