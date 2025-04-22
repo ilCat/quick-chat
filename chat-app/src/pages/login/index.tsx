@@ -4,7 +4,9 @@ import type { FormProps } from 'antd'
 import { Button, Form, Input,notification } from 'antd'
 import { INotification } from '../../services/Utils'
 import { useNavigate } from 'react-router-dom'
-import { useUser } from '../../context/AuthContext'
+// import { useUser } from '../../context/AuthContext'
+import { useLocalStorage } from '../../hooks/useLocalStorage'
+
 
 
 interface ILogin {
@@ -15,7 +17,8 @@ interface ILogin {
 
 const Login=() => {
   const nav = useNavigate()
-  const {user,setUser} = useUser()
+  // const {user,setUser} = useUser()
+  const { setItem, removeItem, getItem } = useLocalStorage()
   const [api, contextHolder] = notification.useNotification()
   const openNotification = (notification: INotification) => {
     api[notification.type]({
@@ -24,8 +27,9 @@ const Login=() => {
   }
   const onFinish: FormProps<ILogin>['onFinish'] = (values) => {
     openNotification({type: 'success', message:`Welcome ${ values.username} `})
-    setUser(values.username)
-    setTimeout( ()=>nav('chat'),150)
+    localStorage.setItem('user', values.username)
+    nav('/chat')
+
   }
   
   const onFinishFailed: FormProps<ILogin>['onFinishFailed'] = (errorInfo) => {

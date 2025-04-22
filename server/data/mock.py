@@ -1,4 +1,5 @@
 src_docs = [
+    {"title": "References for this chat", "url": "http://localhost:8000/cacheList"},
     {"title": "Training Data for LLMs", "url": "https://arxiv.org/abs/2411.07715"},
     {"title": "Prompt Engineering Survey", "url": "https://arxiv.org/abs/2406.06608"},
     {"title": "Attention in Vision", "url": "https://arxiv.org/abs/2111.07624"},

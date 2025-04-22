@@ -75,6 +75,13 @@ ai_cache = cache.default_cache.copy()
 cache_lock = asyncio.Lock()
 
 
+@app.get("/cacheList")
+async def read_from_cache():
+    await asyncio.sleep(2)
+    async with cache_lock:
+        return ai_cache
+
+
 @app.get("/cache")
 async def read_from_cache(question: str):
     await asyncio.sleep(2)

@@ -48,3 +48,11 @@ function FetchMemories(user_id: string): Promise<StatusResponce<IHistroryChat[]>
     })
 }
 export {FetchMemories}
+
+
+function FetchCacheList(): Promise<Object>{
+  return fetch(`http://localhost:8000/cacheList`).then(response => {
+      return response.json()
+    })
+}
+export {FetchCacheList}

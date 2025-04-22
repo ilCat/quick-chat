@@ -7,31 +7,46 @@ import { IButtonProps, ButtonPanel } from '../../components/button-panel/ButtonP
 import { SendMessage, FetchDocs, Idocs, FetchMemories } from '../../services/Utils';
 import { MenuProps } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/AuthContext';
-
+import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { FetchCacheList } from '../../services/Utils';
 
 const { TextArea } = Input;
-const user ='Nessuno' 
+// const user ='Nessuno' 
 
 
 
-const ChatWindow= () => {
+const ChatWindow = () => {
   const nav = useNavigate()
+  const { setItem, removeItem, getItem } = useLocalStorage()
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [input, setInput] = useState("");
   const [items, setItems] = useState<MenuProps['items']>([{label: '', key:'999999999'}])
-  // const {user,setUser}  = useUser()
-  
-
+  const user = localStorage.getItem('user')
+  console.log('user',user)
   useEffect(()=>{
-    if(user === null || !user){
+    if(user === null ){
       nav('/')
     }
-    FetchDocs().then(res => {
-      const collection = res.map((i, id) => {
+    //Just in case to give another use
+    // FetchDocs().then(res => {
+    //   const collection = res.map((i, id) => {
+    //     return {label: (
+    //                     <a onClick={()=>handleReference(i)} href={i.url}  target="_blank" >
+    //                       {i.title}
+    //                     </a>
+    //                   ),
+    //             key: id.toString()}}
+    //   )
+    //   console.log(collection)
+    //   setItems(collection)
+    // })
+    FetchCacheList().then(res => {
+      const collection = Object.keys(res).map((i, id) => {
         return {label: (
-                        <a onClick={()=>handleReference(i)} >
-                          {i.title}
+                        <a onClick={()=>{
+                          console.log(i)
+                        setInput(i)}}>
+                          {i}
                         </a>
                       ),
                 key: id.toString()}}
