@@ -1,23 +1,32 @@
 import './styles.css'
 import React, { useEffect, useState } from "react";
 import { Dropdown, Input, Space} from "antd";
-import ChatMessage, { ChatMessageProps } from "../messages/GenericMessage";
+import ChatMessage, { ChatMessageProps } from "../../components/messages/GenericMessage";
 import { FilePdfOutlined, SearchOutlined } from '@ant-design/icons';
-import { IButtonProps, ButtonPanel } from '../button-panel/ButtonPanel';
+import { IButtonProps, ButtonPanel } from '../../components/button-panel/ButtonPanel';
 import { SendMessage, FetchDocs, Idocs, FetchMemories } from '../../services/Utils';
 import { MenuProps } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../context/AuthContext';
 
 
 const { TextArea } = Input;
-const user ='Nessuno'
+const user ='Nessuno' 
 
-const ChatWindow: React.FC = () => {
+
+
+const ChatWindow= () => {
+  const nav = useNavigate()
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [input, setInput] = useState("");
   const [items, setItems] = useState<MenuProps['items']>([{label: '', key:'999999999'}])
+  // const {user,setUser}  = useUser()
   
 
   useEffect(()=>{
+    if(user === null || !user){
+      nav('/')
+    }
     FetchDocs().then(res => {
       const collection = res.map((i, id) => {
         return {label: (
@@ -33,14 +42,17 @@ const ChatWindow: React.FC = () => {
 
   },[])
 
-  useEffect(() =>{   FetchMemories(user).then(res=> {
-    if (res.length >0){
-      const hist = res.map(data =>{return {"sender": data.owner, 
+  useEffect(() =>{   
+    if(user === null || !user){
+    FetchMemories(user).then(res=> {
+    if (res.response.length >0){
+      const hist = res.response.map(data =>{return {"sender": data.owner, 
         "message": data.message }})
         console.log(hist)
       setMessages(hist)
     }
-  })},[])
+  })}
+},[])
 
   const handleReference =(i:Idocs)=>{  
     const msg = "Have in account for the theme "+i.title+"  the next link <"+ i.url +">" 
@@ -62,7 +74,7 @@ const ChatWindow: React.FC = () => {
       { sender: "system", message: "🤖 " , loading: true}])
     setInput("")
 
-    SendMessage({user:user, message: input }).then( resp => {
+    SendMessage({user: user, message: input }).then( resp => {
       setMessages(prev => [ ...prev.filter(x => x.loading !== true),
         {sender: resp.response.owner ,message: resp.response.message }]
       )
@@ -84,7 +96,8 @@ const ChatWindow: React.FC = () => {
   }]
 
 
-  return (
+  return (<>
+    {user !== null ?
     <div className="chat-component"
     >
       <div className="chat-message">
@@ -121,7 +134,9 @@ const ChatWindow: React.FC = () => {
         <ButtonPanel buttons={buttons}/>
         
       </div>
-    </div>
+    </div>:
+  <div>Error </div>}
+  </>
   );
 };
 

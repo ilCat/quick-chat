@@ -23,10 +23,11 @@ async def read_root():
     return {"Hi: Welcome to Quick-Chat Server"}
 
 
+# CHAT STUFF
 @app.get("/memories/{user_id}")
 async def get_history(user_id: str):
     history = await get_chat_history(user_id)
-    return {"history": history}
+    return {"response": history}
 
 
 @app.post(

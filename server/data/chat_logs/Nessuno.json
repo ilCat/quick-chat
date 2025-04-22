@@ -1,0 +1,26 @@
+[
+  {
+    "owner": "human",
+    "message": "Hi"
+  },
+  {
+    "owner": "system",
+    "message": "Hey there! 👋 How can I help you today?"
+  },
+  {
+    "owner": "human",
+    "message": "Have in account for the theme Training Data for LLMs  the next link <https://arxiv.org/abs/2411.07715>"
+  },
+  {
+    "owner": "system",
+    "message": "⚡Simulated response to [User->Nessuno / Message->Have in account for the theme Training Data for LLMs  the next link <https://arxiv.org/abs/2411.07715>]"
+  },
+  {
+    "owner": "human",
+    "message": "Hi"
+  },
+  {
+    "owner": "system",
+    "message": "Hey there! 👋 How can I help you today?"
+  }
+]

@@ -1,3 +1,7 @@
+export interface INotification {
+  type :'success' | 'info' | 'warning' | 'error'
+  message: string
+}
 
 interface StatusResponce<T> {
   statusCode?:  number
@@ -8,7 +12,7 @@ export interface IHistroryChat {
   owner: "human" | "system" 
   message: string 
 }
-function SendMessage({user, message, document=false}:{user:string, message:string, document?: boolean	}): Promise<StatusResponce<IHistroryChat>>{
+function SendMessage({user, message, document=false}:{user?:string | null, message:string, document?: boolean	}): Promise<StatusResponce<IHistroryChat>>{
     return fetch(`http://localhost:8000/message`, {
         method: 'POST',
         headers: {
@@ -38,7 +42,7 @@ function FetchDocs(): Promise<Idocs[]>{
 export {FetchDocs}
 
 
-function FetchMemories(user_id: string): Promise<IHistroryChat[]>{
+function FetchMemories(user_id: string): Promise<StatusResponce<IHistroryChat[]>>{
   return fetch(`http://localhost:8000/memories/${user_id}`).then(response => {
       return response.json()
     })

@@ -1,11 +1,8 @@
 import './styles.css'
 import { Button, Upload, notification} from "antd";
 import { UploadProps } from 'antd';
+import { INotification } from '../../services/Utils';
 
-interface INotification {
-  type :'success' | 'info' | 'warning' | 'error'
-  message: string
-}
 export interface IButtonProps {
     title: string
     icon?: any
@@ -21,7 +18,7 @@ interface IButtonPanelProps{
 
 export const ButtonPanel = (props: IButtonPanelProps) => {
 
-  const [api, contextHolder] = notification.useNotification();
+  const [api, contextHolder] = notification.useNotification()
 
   const openNotification = (notification: INotification) => {
     api[notification.type]({
@@ -40,9 +37,9 @@ export const ButtonPanel = (props: IButtonPanelProps) => {
       console.log('info ->',info)
       if (info.file.status === 'done') {
         
-        openNotification({type: 'success', message:`${info.file.name} file uploaded successfully`});
+        openNotification({type: 'success', message:`${info.file.name} file uploaded successfully`})
       } else if (info.file.status === 'error') {
-        openNotification({type: 'error', message:`${info.file.name} file upload failed.`});
+        openNotification({type: 'error', message:`${info.file.name} file upload failed.`})
       }
     },
   }

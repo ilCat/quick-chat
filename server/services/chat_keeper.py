@@ -1,7 +1,7 @@
 import json
 import os
 
-DATA_DIR = "/data/chat_logs"
+DATA_DIR = "data/chat_logs"
 
 os.makedirs(DATA_DIR, exist_ok=True)
 
